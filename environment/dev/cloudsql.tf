@@ -64,7 +64,7 @@ resource "google_sql_user" "users" {
 
 resource "google_sql_database" "database" {
   project = var.project_id
-  name     = "demo-database"
+  name     = "gcp-training"
   instance = google_sql_database_instance.instance.name
 }
 
@@ -110,6 +110,10 @@ resource "google_sql_database_instance" "instance" {
 
   settings {
     tier = "db-n1-standard-1"
+    database_flags {
+      name  = "cloudsql.iam_authentication"
+      value = "on"
+    }
     ip_configuration {
       ipv4_enabled    = false
       private_network = google_compute_network.vpc_network.id
@@ -120,4 +124,11 @@ resource "google_sql_database_instance" "instance" {
 provider "google-beta" {
   region = "us-central1"
   zone   = "us-central1-a"
+}
+
+resource "google_sql_user" "users" {
+  name     = "db-demo-user"
+  instance = "${google_sql_database_instance.instance.name}"
+  host     = "sql-db-demo.com"
+  #password = "changeme"
 }
