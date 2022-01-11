@@ -50,10 +50,6 @@ resource "google_sql_user" "users" {
   type     = "CLOUD_IAM_USER"
   host     = "mysql-demodb.com"
   password = ""
-}
-/*provider "google-beta" {
-  region = "us-central1"
-  zone   = "us-central1-b"
 }*/
 
 ##############################################################
@@ -65,6 +61,11 @@ resource "google_sql_user" "users" {
 #f.	Set user and password (to be used later).                #
 #g.	Use the same network as the GKE cluster.                 #
 ##############################################################
+
+resource "google_sql_database" "database" {
+  name     = "demo-database"
+  instance = google_sql_database_instance.instance.name
+}
 
 resource "google_compute_network" "private_network" {
   provider = google-beta
@@ -107,7 +108,7 @@ resource "google_sql_database_instance" "instance" {
   depends_on = [google_service_networking_connection.private_vpc_connection]
 
   settings {
-    tier = "db-f1-micro"
+    tier = "db-n1-standard-1"
     ip_configuration {
       ipv4_enabled    = false
       private_network = google_compute_network.vpc_network.id
