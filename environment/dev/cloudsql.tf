@@ -1,32 +1,26 @@
-#User
-/*resource "google_sql_user" "users" {
-  name     = "user-sql"
-  instance = google_sql_database_instance.isntance.name
-  type     = "CLOUD_IAM_USER"
-}*/
+/*resource "google_sql_database" "database" {
+  name     = "demo-database"
+  instance = google_sql_database_instance.instance.name
+}
 
+resource "google_compute_global_address" "private_ip_address" {
+  provider = google-beta
+  project          = var.project_id
+  name          = "private-ip-address"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = google_compute_network.vpc_network.id
+}
 
+resource "google_service_networking_connection" "private_vpc_connection" {
+  provider = google-beta
 
-##########################################################
-/*
-module "sql-db" {
-  source  = "GoogleCloudPlatform/sql-db/google"
-  version = "8.0.0"
-  # insert the 5 required variables here
-    project_id = var.project_id
-    user_name = "user-sql"
-    user_password = ""
+  network                 = google_compute_network.vpc_network.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
+}
 
-    database_version = "MYSQL_5_6" #####
-    name = "mysql-instance" ############ 
-    activation_policy = "ALWAYS" #######
-
-    zone = "us-central1-b" #############
-    region = "us-central1" #############
-    tier = "db-n1-standard-1" ##########
-    db_charset = "UTF8" 
-}*/
-#########################################################
 resource "google_sql_database_instance" "instance" {
   project          = var.project_id
   name             = "mysql-instance"
@@ -45,20 +39,22 @@ resource "google_sql_database_instance" "instance" {
       private_network = google_compute_network.vpc_network.id
     }
     backup_configuration {
-      binary_log_enabled = false
+      binary_log_enabled = true
+      enabled = true
     }
   }
 }
 resource "google_sql_user" "users" {
   name     = "user-sql"
   instance = google_sql_database_instance.instance.name
+  type     = "CLOUD_IAM_USER"
   host     = "mysql-demodb.com"
   password = ""
 }
-provider "google-beta" {
+/*provider "google-beta" {
   region = "us-central1"
   zone   = "us-central1-b"
-}
+}*/
 
 ##############################################################
 #a.	Regional (same region of the GKE cluster).               #
@@ -70,3 +66,56 @@ provider "google-beta" {
 #g.	Use the same network as the GKE cluster.                 #
 ##############################################################
 
+resource "google_compute_network" "private_network" {
+  provider = google-beta
+  project = var.project_id
+  name = "private-network"
+}
+
+#google_compute_network" "vpc_network
+
+resource "google_compute_global_address" "private_ip_address" {
+  provider = google-beta
+  project = var.project_id
+  name          = "private-ip-address"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = google_compute_network.vpc_network.id
+}
+
+resource "google_service_networking_connection" "private_vpc_connection" {
+  provider = google-beta
+
+  network                 = google_compute_network.vpc_network.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
+}
+
+resource "random_id" "db_name_suffix" {
+  byte_length = 4
+}
+
+resource "google_sql_database_instance" "instance" {
+  provider = google-beta
+  project = var.project_id
+
+  name             = "test1-instance-${random_id.db_name_suffix.hex}"
+  region           = "us-central1"
+  database_version = "MYSQL_5_6"
+  deletion_protection = false
+  depends_on = [google_service_networking_connection.private_vpc_connection]
+
+  settings {
+    tier = "db-f1-micro"
+    ip_configuration {
+      ipv4_enabled    = false
+      private_network = google_compute_network.vpc_network.id
+    }
+  }
+}
+
+provider "google-beta" {
+  region = "us-central1"
+  zone   = "us-central1-a"
+}
