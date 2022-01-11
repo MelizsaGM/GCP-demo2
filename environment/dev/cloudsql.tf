@@ -63,6 +63,7 @@ resource "google_sql_user" "users" {
 ##############################################################
 
 resource "google_sql_database" "database" {
+  project = var.project_id
   name     = "demo-database"
   instance = google_sql_database_instance.instance.name
 }
