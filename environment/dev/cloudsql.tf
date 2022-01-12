@@ -66,6 +66,7 @@ resource "google_sql_database" "database" {
   project = var.project_id
   name     = "gcp-training"
   instance = google_sql_database_instance.instance.name
+  charset = "UTF8"
 }
 
 #google_compute_network" "vpc_network
@@ -105,7 +106,7 @@ resource "google_sql_database_instance" "instance" {
   settings {
     tier = "db-n1-standard-1"
     activation_policy = "ALWAYS"
-    charset = "UTF8"
+    
     ip_configuration {
       ipv4_enabled    = false
       private_network = google_compute_network.vpc_network.id
