@@ -49,7 +49,7 @@ resource "google_sql_database_instance" "instance" {
   provider = google-beta
   project  = var.project_id
 
-  name                = "test5-instance-${random_id.db_name_suffix.hex}"
+  name                = "test6-instance-${random_id.db_name_suffix.hex}"
   region              = "us-central1"
   database_version    = "MYSQL_5_6"
   deletion_protection = false
