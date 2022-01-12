@@ -11,7 +11,7 @@ resource "kubernetes_ingress" "ingress" {
       http {
         path {
           backend {
-            service_name = "ghost-deploy-elizabeth-garcia1epam-com"
+            service_name = "ghost-deploy"
             service_port = 8080
           }
 
