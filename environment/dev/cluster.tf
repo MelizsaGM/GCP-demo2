@@ -27,14 +27,14 @@ module "gke" {
       autoscaling    = true
       node_locations = "us-central1-b" //list zones
       #node_count                 = 2               //Number of nodes
-      local_ssd_count            = 0
-      disk_size_gb               = 50
-      disk_type                  = "pd-standard"
-      image_type                 = "COS"
-      auto_repair                = true
-      auto_upgrade               = true
-      preemptible                = false
-      master_authorized_networks = "177.245.212.95"
+      local_ssd_count = 0
+      disk_size_gb    = 50
+      disk_type       = "pd-standard"
+      image_type      = "COS"
+      auto_repair     = true
+      auto_upgrade    = true
+      preemptible     = false
+      #master_authorized_networks = "177.245.212.95"
 
     },
   ]

@@ -1,8 +1,8 @@
 resource "helm_release" "ghost" {
-  namespace = "elizabeth_garcia1@epam_com"
-  name       = "ghost-deploy"
-  repository = "https://charts.bitnami.com/bitnami"
-  chart      = "ghost"
+  namespace        = "elizabeth-garcia1epam-com"
+  name             = "ghost-deploy"
+  repository       = "https://charts.bitnami.com/bitnami"
+  chart            = "ghost"
   create_namespace = true
 
   set {
