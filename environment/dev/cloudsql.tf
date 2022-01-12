@@ -95,7 +95,7 @@ resource "random_id" "db_name_suffix" {
 resource "google_sql_database_instance" "instance" {
   provider = google-beta
   project = var.project_id
-  charset = "UTF8"
+  
   name             = "test4-instance-${random_id.db_name_suffix.hex}"
   region           = "us-central1"
   database_version = "MYSQL_5_6"
@@ -105,6 +105,7 @@ resource "google_sql_database_instance" "instance" {
   settings {
     tier = "db-n1-standard-1"
     activation_policy = "ALWAYS"
+    charset = "UTF8"
     ip_configuration {
       ipv4_enabled    = false
       private_network = google_compute_network.vpc_network.id
@@ -140,4 +141,5 @@ resource "google_sql_user" "users" {
  lifecycle {
    ignore_changes = ["plaintext_password"]
  }
+ depends_on = [google_sql_database_instance.instance]
 }
