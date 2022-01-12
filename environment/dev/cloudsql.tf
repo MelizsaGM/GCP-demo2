@@ -54,24 +54,18 @@ resource "google_sql_user" "users" {
 
 ##############################################################
 #a.	Regional (same region of the GKE cluster).               #
-#b.	Version 5.6.                                             #
-#c.	Tier n1-standard-1.                                      #
-#d.	Charset UTF8.                                            #
-#e.	Activation policy: ALWAYS.                               #
-#f.	Set user and password (to be used later).                #
-#g.	Use the same network as the GKE cluster.                 #
+#b.	Version 5.6.           --------------------------------- #
+#c.	Tier n1-standard-1.    --------------------------------- #
+#d.	Charset UTF8.          --------------------------------- #
+#e.	Activation policy: ALWAYS.-------------------------------#
+#f.	Set user and password (to be used later).-----1/2        #
+#g.	Use the same network as the GKE cluster. ----------------#
 ##############################################################
 
 resource "google_sql_database" "database" {
   project = var.project_id
   name     = "gcp-training"
   instance = google_sql_database_instance.instance.name
-}
-
-resource "google_compute_network" "private_network" {
-  provider = google-beta
-  project = var.project_id
-  name = "private-network"
 }
 
 #google_compute_network" "vpc_network
@@ -101,8 +95,8 @@ resource "random_id" "db_name_suffix" {
 resource "google_sql_database_instance" "instance" {
   provider = google-beta
   project = var.project_id
-
-  name             = "test2-instance-${random_id.db_name_suffix.hex}"
+  charset = "UTF8"
+  name             = "test4-instance-${random_id.db_name_suffix.hex}"
   region           = "us-central1"
   database_version = "MYSQL_5_6"
   deletion_protection = false
@@ -110,6 +104,7 @@ resource "google_sql_database_instance" "instance" {
 
   settings {
     tier = "db-n1-standard-1"
+    activation_policy = "ALWAYS"
     ip_configuration {
       ipv4_enabled    = false
       private_network = google_compute_network.vpc_network.id
@@ -128,4 +123,21 @@ resource "google_sql_user" "users" {
   instance = "${google_sql_database_instance.instance.name}"
   host     = "sql-db-demo.com"
   #password = "changeme"
+}
+
+
+/**/
+resource "random_string" "password" {
+ length = 16
+ special = true
+}
+
+resource "google_sql_user" "users" {
+ user = var.dbuser
+ host = "sql-db-demo.com"
+ instance = "${google_sql_database_instance.instance.name}"
+ plaintext_password = "${sha256(bcrypt(random_string.password.result))}"
+ lifecycle {
+   ignore_changes = ["plaintext_password"]
+ }
 }
