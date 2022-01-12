@@ -138,7 +138,7 @@ resource "google_sql_user" "users" {
  user = var.dbuser
  host = "sql-db-demo.com"
  instance = "${google_sql_database_instance.instance.name}"
- plaintext_password = "${sha256(bcrypt(random_string.password.result))}"
+ password = "${sha256(bcrypt(random_string.password.result))}"
  lifecycle {
    ignore_changes = ["plaintext_password"]
  }
