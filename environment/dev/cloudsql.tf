@@ -123,6 +123,7 @@ provider "google-beta" {
 }
 
 resource "google_sql_user" "users" {
+  project = var.project_id
   name     = var.dbuser
   instance = "${google_sql_database_instance.instance.name}"
   host     = "sql-db-demo.com"
