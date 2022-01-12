@@ -117,7 +117,7 @@ provider "google-beta" {
   zone   = "us-central1-a"
 }
 
-resource "google_sql_user" "users" {
+/*resource "google_sql_user" "users" {
   project = var.project_id
   name     = var.dbuser
   instance = "${google_sql_database_instance.instance.name}"
