@@ -6,7 +6,7 @@ resource "kubernetes_ingress" "ingress" {
   spec {
 
     rule {
-      host = "ghost-gke.example"
+      host = "ghost-gke.demo.example"
       http {
         path {
           backend {

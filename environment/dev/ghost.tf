@@ -11,7 +11,7 @@ resource "helm_release" "ghost" {
   }
   set {
     name  = "ghostHost"
-    value = "ghost-gke.example"
+    value = "ghost-gke.demo.example"
   }
   set {
     name  = "replicaCount"
