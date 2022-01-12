@@ -140,7 +140,7 @@ resource "google_sql_user" "users" {
  instance = "${google_sql_database_instance.instance.name}"
  password = "${sha256(bcrypt(random_string.password.result))}"
  lifecycle {
-   ignore_changes = ["plaintext_password"]
+   ignore_changes = ["password"]
  }
  depends_on = [google_sql_database_instance.instance]
 }
