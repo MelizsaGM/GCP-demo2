@@ -135,6 +135,7 @@ resource "random_string" "password" {
 }
 
 resource "google_sql_user" "users" {
+  project = var.project_id
  name = var.dbuser
  host = "sql-db-demo.com"
  instance = "${google_sql_database_instance.instance.name}"
