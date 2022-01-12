@@ -1,49 +1,4 @@
-/*resource "google_sql_database" "database" {
-  name     = "demo-database"
-  instance = google_sql_database_instance.instance.name
-}
-
-resource "google_compute_global_address" "private_ip_address" {
-  provider = google-beta
-  project          = var.project_id
-  name          = "private-ip-address"
-  purpose       = "VPC_PEERING"
-  address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = google_compute_network.vpc_network.id
-}
-
-resource "google_service_networking_connection" "private_vpc_connection" {
-  provider = google-beta
-
-  network                 = google_compute_network.vpc_network.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
-}
-
-resource "google_sql_database_instance" "instance" {
-  project          = var.project_id
-  name             = "mysql-instance"
-  region           = "us-central1"
-  database_version = "MYSQL_5_6"
-  #zone             = "us-central1-b"
-
-  depends_on = [google_compute_network.vpc_network]
-
-  settings {
-    tier              = "db-n1-standard-1"
-    availability_type = "REGIONAL"
-    activation_policy = "ALWAYS"
-    ip_configuration {
-      ipv4_enabled    = false
-      private_network = google_compute_network.vpc_network.id
-    }
-    backup_configuration {
-      binary_log_enabled = true
-      enabled = true
-    }
-  }
-}
+/*
 resource "google_sql_user" "users" {
   name     = "user-sql"
   instance = google_sql_database_instance.instance.name
@@ -69,8 +24,6 @@ resource "google_sql_database" "database" {
   charset = "UTF8"
 }
 
-#google_compute_network" "vpc_network
-
 resource "google_compute_global_address" "private_ip_address" {
   provider = google-beta
   project = var.project_id
@@ -83,7 +36,6 @@ resource "google_compute_global_address" "private_ip_address" {
 
 resource "google_service_networking_connection" "private_vpc_connection" {
   provider = google-beta
-
   network                 = google_compute_network.vpc_network.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
@@ -143,5 +95,5 @@ resource "google_sql_user" "users" {
  lifecycle {
    ignore_changes = ["password"]
  }
- depends_on = [google_sql_database_instance.instance]
+ depends_on = [google_sql_database_instance.instance, random_string.password]
 }
