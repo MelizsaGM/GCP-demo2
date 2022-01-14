@@ -26,7 +26,6 @@ module "gke" {
       machine_type   = "n1-standard-1"
       autoscaling    = true
       node_locations = "us-central1-b" //list zones
-      #node_count                 = 2               //Number of nodes
       local_ssd_count = 0
       disk_size_gb    = 50
       disk_type       = "pd-standard"

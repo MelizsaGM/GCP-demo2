@@ -8,9 +8,10 @@ variable "dbuser" {
   type        = string
   default     = "db-demo-user"
 }
-/*
-variable "user_password" {
-  description = "The password for the default user. If not set, a random one will be generated and available in the generated_user_password output variable."
+
+
+variable "image" {
+  description = "Docker image"
   type        = string
-  default     = ""
-}*/
+  default     = "us.gcr.io/gcpdemo-task1/cronsql@sha256:9b9b076db233357649eab03035652b086d6c323f97a1e3b2814580b4730ed33b"
+}

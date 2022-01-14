@@ -1,6 +1,6 @@
 resource "kubernetes_ingress" "ingress" {
   metadata {
-    name = "ingress"
+    name      = "ingress"
     namespace = "elizabeth-garcia1epam-com"
   }
 
