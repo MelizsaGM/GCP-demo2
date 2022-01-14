@@ -1,3 +1,4 @@
+#exposing deployment
 resource "kubernetes_ingress" "ingress" {
   metadata {
     name      = "ingress"
