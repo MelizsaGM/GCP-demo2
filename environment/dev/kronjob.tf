@@ -23,7 +23,7 @@ resource "kubernetes_cron_job" "demo" {
               
               name               = "sql-demo"
               image              = "us.gcr.io/gcpdemo-task1/cronsql@sha256:9b9b076db233357649eab03035652b086d6c323f97a1e3b2814580b4730ed33b"
-              command            = ["/bin/ash", "-c", "date; gsutil ls; export MYSQL_PWD=${sha256(random_string.password.result)}; mysqldump -u db-demo-user -h cloudsql-proxy-gcloud-sqlproxy gcp-training >> /tmp/data-dump.sql && gsutil cp /tmp/data-dump.sql gs://demo2-gcp"]#, "gsutil cp /text.txt gs://demo2-gcp"]
+              command            = ["/bin/ash", "-c", "date; gsutil ls; export MYSQL_PWD=${sha256(random_string.password.result)}; mysqldump -u db-demo-user -h cloudsql-proxy-gcloud-sqlproxy gcp-training >> /tmp/data-dump.sql && gsutil cp /tmp/data-dump.sql gs://demo2-gcp/gcp-training.gz"]#, "gsutil cp /text.txt gs://demo2-gcp"]
             }
             restart_policy = "Never"
           }
