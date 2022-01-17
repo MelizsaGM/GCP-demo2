@@ -33,7 +33,7 @@ module "gke" {
       auto_repair     = true
       auto_upgrade    = true
       preemptible     = false
-      #master_authorized_networks = "177.245.212.95"
+      master_authorized_networks = "189.143.50.199"
 
     },
   ]
